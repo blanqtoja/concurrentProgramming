@@ -4,5 +4,6 @@
 
 | Name Surname (initials) | GUID                                     |
 | ----------------------- | ---------------------------------------- |
-| AB                      | `{FD9D086C-532F-4AAC-BB99-69D7798837D8}` |
-| Jan Kowalski            | `{44FBFCF5-4430-4964-878D-1867DC679E0D}` |
+| Aleksander Kazmierczak  | `{7f7794ef-a641-404d-9b88-eedcbd124bf8}` |
+| Adrian Urbanczyk        | `{0b5163c9-7b25-445c-b19e-efa70c9b97fe}` |
+
