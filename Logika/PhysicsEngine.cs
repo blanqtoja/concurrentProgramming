@@ -15,6 +15,17 @@ namespace Logika
             this.balls = balls;
         }
 
+        public void UpdateBallPosition(Ball ball)
+        {
+            ball.X += ball.VelocityX;
+            ball.Y += ball.VelocityY;
+        }
+
+        public void HandleCollisions(List<Ball> balls, Table table)
+        {
+            // Implementacja kolizji z bandami i innymi kulami
+        }
+
         // kolizja z banda
         bool BandXCollision(Ball ball)
         {
