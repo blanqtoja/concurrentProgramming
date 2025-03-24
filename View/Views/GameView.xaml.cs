@@ -12,20 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using ViewModel;
 
 namespace View.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy StartView.xaml
+    /// Logika interakcji dla klasy GameView.xaml
     /// </summary>
-    public partial class StartView : UserControl
+    public partial class GameView : UserControl
     {
-        public StartView()
+        public GameView()
         {
             InitializeComponent();
-            DataContext = new ViewModel.StartViewModel();
-            
+            DataContext = new ViewModel.GameViewModel();
+
         }
     }
 }

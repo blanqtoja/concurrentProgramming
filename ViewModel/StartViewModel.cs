@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Input;
 using Model;
+using ViewModel.Storages;
 
 namespace ViewModel
 {
@@ -59,9 +60,9 @@ namespace ViewModel
         public ICommand IncrementCommand { get; }
         public ICommand DecrementCommand { get; }
 
-        public StartViewModel()
+        public StartViewModel(NavigationStore navigationStore)
         {
-            
+            StartCommand = new Commands.StartCommand(navigationStore);
         }
     }
 }

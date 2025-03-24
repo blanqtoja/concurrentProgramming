@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using Model;
 
-namespace Dane.BallRepository
+namespace Data.BallRepository
 {
     public class BallRepository: IBallRepository
     {

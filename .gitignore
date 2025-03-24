@@ -3,12 +3,17 @@
 ################################################################################
 
 /.vs
-/Dane/obj
+/Data/obj
+/Data/bin
 /Logika/obj
-/Model/bin/Debug/netstandard2.0
+/Logika/bin
+/Logic/bin
+/Logic/obj
+/Model/bin
 /Model/obj
 /Tests/bin
 /Tests/obj
-/View/bin/Debug/net8.0-windows
+/View/bin
 /View/obj
 /ViewModel/obj
+/ViewModel/bin

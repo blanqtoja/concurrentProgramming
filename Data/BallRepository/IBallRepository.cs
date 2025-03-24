@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using Model;
 
-namespace Dane.BallRepository
+namespace Data.BallRepository
 {
     interface IBallRepository
     {

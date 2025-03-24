@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Xml;
 using Model;
 
-namespace Dane.TableRepository
+namespace Data.TableRepository
 {
     public class TableRepository: ITableRepository
     {

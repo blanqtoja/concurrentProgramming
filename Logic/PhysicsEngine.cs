@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Model;
 
-namespace Logika
+namespace Logic
 {
     public class PhysicsEngine
     {
@@ -15,32 +15,50 @@ namespace Logika
             this.balls = balls;
         }
 
-        public void UpdateBallPosition(Ball ball)
+        private void UpdateBallPosition(Ball ball)
         {
             ball.X += ball.VelocityX;
             ball.Y += ball.VelocityY;
+
+            HandleCollisions(ball, table);
         }
 
-        public void HandleCollisions(List<Ball> balls, Table table)
+        private void HandleCollisions(Ball ball, Table table)
         {
-            // Implementacja kolizji z bandami i innymi kulami
+            if(ball == null) return;
+            // Implementacja kolizji z bandami
+
+            if (BandXCollision(ball))
+            {
+                ball.VelocityX = -ball.VelocityX;
+            }
+            if (BandYCollision(ball))
+            {
+                ball.VelocityY = -ball.VelocityY;
+            }
         }
 
         // kolizja z banda
-        bool BandXCollision(Ball ball)
+        private bool BandXCollision(Ball ball)
         {
             if(ball == null) return false;
             if (ball.X >= table.Width || ball.X <= 0) return true;
             return false;
         }
-        bool BandYCollision(Ball ball)
+        private bool BandYCollision(Ball ball)
         {
             if (ball == null) return false;
             if (ball.Y >= table.Width || ball.Y <= 0) return true;
             return false;
         }
 
-        // poruszanie kula
-
+        // ruch wszystkich kul
+        public void MoveBalls()
+        {
+            foreach (Ball ball in balls)
+            {
+                UpdateBallPosition(ball);
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml;
 using Model;
 
-namespace Dane.TableRepository
+namespace Data.TableRepository
 {
     interface ITableRepository
     {
