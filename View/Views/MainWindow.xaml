@@ -20,8 +20,8 @@
                 <views:GameView/>
             </DataTemplate>
         </Grid.Resources>
-        
-        <ContentControl Content="{Binding CurrentViewModel}"
+
+        <ContentControl Content="{Binding CurrentViewModel}" />
     </Grid>
         
 </Window>

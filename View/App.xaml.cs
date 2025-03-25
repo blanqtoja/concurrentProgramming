@@ -1,7 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Windows;
-using ViewModel.Storages;
+using ViewModel.Stores;
 
 namespace View;
 
@@ -19,9 +19,9 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        _navigationStore.CurrentViewModel = new ViewModel.StartViewModel();
+        _navigationStore.CurrentViewModel = new ViewModel.StartViewModel(_navigationStore);
 
-        MainWindow = new Views.MainWindow()
+        MainWindow = new Views.MainWindow(_navigationStore)
         {
             DataContext = new ViewModel.MainViewModel(_navigationStore)
         };

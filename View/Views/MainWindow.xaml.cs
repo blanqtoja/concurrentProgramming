@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using ViewModel; // Import ViewModel
 using System.Windows.Input;
+using ViewModel.Stores;
 
 namespace View.Views
 {
@@ -8,11 +9,11 @@ namespace View.Views
     {
         private readonly StartViewModel _viewModel;
 
-        public MainWindow()
+        public MainWindow(NavigationStore navigationStore)
         {
             InitializeComponent(); // Inicjalizacja UI
 
-            _viewModel = new StartViewModel();
+            _viewModel = new StartViewModel(navigationStore);
             DataContext = _viewModel; // Powiązanie z ViewModel
         }
     }

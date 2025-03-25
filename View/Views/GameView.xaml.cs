@@ -23,7 +23,7 @@ namespace View.Views
         public GameView()
         {
             InitializeComponent();
-            DataContext = new ViewModel.GameViewModel();
+            //DataContext = new ViewModel.GameViewModel();
 
         }
     }

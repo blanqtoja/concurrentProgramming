@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Input;
 using Model;
-using ViewModel.Storages;
+using ViewModel.Stores;
 
 namespace ViewModel
 {

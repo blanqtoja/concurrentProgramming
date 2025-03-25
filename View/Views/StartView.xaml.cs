@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ViewModel;
+using ViewModel.Stores;
 
 namespace View.Views
 {
@@ -24,7 +25,7 @@ namespace View.Views
         public StartView()
         {
             InitializeComponent();
-            DataContext = new ViewModel.StartViewModel();
+            //DataContext = new ViewModel.StartViewModel(navigationStore);
             
         }
     }

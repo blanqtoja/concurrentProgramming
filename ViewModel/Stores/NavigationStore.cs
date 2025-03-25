@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ViewModel.Storages
+namespace ViewModel.Stores
 {
     public class NavigationStore
     {

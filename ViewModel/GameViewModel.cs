@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Net.NetworkInformation;
-using System.Text;
 using Logic;
 using Model;
 
@@ -10,42 +8,37 @@ namespace ViewModel
 {
     public class GameViewModel : ViewModelBase
     {
-        private PhysicsEngine physicsEngine;
-        private List<Ball> balls = new List<Ball>();
+        // silnik fizyczny gry
+        private PhysicsEngine _physicsEngine;
 
-        private Table table = new Table(300, 400, Color.GreenYellow);
-        private Ball ball = BallFactory.MakeBall(0, 10, Color.HotPink, 50,70, 5, 2);
+        // ista przechowujaca wszystkie kule
+        private List<Ball> _balls = new List<Ball>();
+
+        // stol
+        private Table _table;
+        // kula
+        private Ball _ball;
+
+        // obserwowalna lista kulek
+        public ObservableCollection<SingleBallViewModel> Circles { get; } = new ObservableCollection<SingleBallViewModel>();
+
         public GameViewModel()
         {
-            balls.Add(ball);
-            foreach (Ball ball in balls)
+
+            _table = new Table(300, 400, Color.GreenYellow);
+            _ball = BallFactory.MakeBall(0, 20, "#ffaaaa", 200, 150, 5, 2);
+
+            _balls.Add(_ball);
+
+            _physicsEngine = new PhysicsEngine(_table, _balls);
+
+            // dodanie kulek do listy obserwowalnej
+            foreach (var ball in _balls)
             {
-                CreateCircle();
+                Circles.Add(new SingleBallViewModel(ball));
             }
-            physicsEngine = new PhysicsEngine(table, balls);
-            while(true)
-            {
-                physicsEngine.MoveBalls();
-                
-            }
+
         }
 
-        // tworzy kolko na ekranie
-        private void CreateCircle()
-        {
-         
-            
-        }
-
-
-        //public string Title
-        //{
-        //    get => _title;
-        //    set
-        //    {
-        //        _title = value;
-        //        OnPropertyChanged(nameof(Title));
-        //    }
-        //}
     }
 }
