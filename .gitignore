@@ -17,3 +17,7 @@
 /View/obj
 /ViewModel/obj
 /ViewModel/bin
+/DataTests/bin
+/DataTests/obj
+/LogicTests/bin
+/LogicTests/obj
