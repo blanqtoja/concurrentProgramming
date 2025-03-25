@@ -5,6 +5,10 @@ namespace DataTest
 {
     public class BallRepositoryTest
     {
+        public void Test()
+        {
+            Assert.Equal(2, 1+1);
+        }
         
         public void SetterGetterTest()
         {
