@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{5BD29759-2467-4A24-82E8-DFFA3FD576AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTest", "Tests\DataTest.csproj", "{7AF71B8C-D0A1-49D0-99E1-62A423A8949C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTests", "DataTests\DataTest.csproj", "{7AF71B8C-D0A1-49D0-99E1-62A423A8949C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
