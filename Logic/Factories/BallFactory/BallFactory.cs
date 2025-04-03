@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
-using Model;
+using Data.Ball;
 
-namespace Logic
+namespace Logic.Factories.BallFactory
 {
-    public static class BallFactory
+    public class BallFactory
     {
-        public static Ball MakeBall(int id, int radius, string color , int x, int y, int velocityX, int velocitY)
+        public Ball MakeBall(int id, int radius, string color , int x, int y, int velocityX, int velocitY)
         {
             return new Ball( id,  radius, color,  x,  y,  velocityX,  velocitY);
         }
 
-        public static Ball MakeRandomBall(int id, int x, int y)
+        public Ball MakeRandomBall(int id, int x, int y)
         {
             Random random = new Random();
             int radius = random.Next(1, 20);
