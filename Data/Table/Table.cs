@@ -11,9 +11,9 @@ namespace Data.Table
         public int Id { get; }
         public string Color { get; set; }
         public int Width { get; set; }
-        public int Hight { get; set; }
+        public int Height { get; set; }
         public int MinWidth { get; set; }
-        public int MinHight { get; set; }
+        public int MinHeight { get; set; }
 
         public Table(int id, string color, int width, int hight, int minWidth, int minHight)
         {

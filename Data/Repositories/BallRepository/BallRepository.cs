@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using Model;
 
 namespace Data.BallRepository
 {
     public class BallRepository: IBallRepository
     {
-        private List<Ball> balls;
+        private List<IBall> balls;
 
-        public BallRepository(List<Ball> balls)
+        public BallRepository(List<IBall> balls)
         {
             Balls = balls;
         }
 
-        public List<Ball> Balls { get => balls; set => balls = value; }
+        public List<IBall> Balls { get => balls; set => balls = value; }
 
-        public Ball GetBallById(int id)
+        public IBall GetBallById(int id)
         {
             for (int i = 0; i < balls.Count; i++)
             {

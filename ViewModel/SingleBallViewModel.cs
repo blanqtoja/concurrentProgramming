@@ -8,7 +8,7 @@ namespace ViewModel
 {
     public class SingleBallViewModel : ViewModelBase
     {
-        private Ball _ball; // referencja do kuli w modelu
+        private BallModel _ball; // referencja do kuli w modelu
 
         // bndingi do UI
         public double X => _ball.X;
@@ -20,7 +20,7 @@ namespace ViewModel
 
 
 
-        public SingleBallViewModel(Ball ball)
+        public SingleBallViewModel(BallModel ball)
         {
             _ball = ball;
         }
