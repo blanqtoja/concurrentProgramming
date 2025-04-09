@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Logic;
+using Logic.PhysicsEngines;
 
 namespace Model
 {
-    public class BillardGame
+    // mam watpliwosci co do polaczenia wartsw aplikacji. gdzi epowinny znajdowac sie interfejsy, gdzie implementacja
+    public class BilliardGameModel
     {
         private readonly IPhysicsEngine _physicsEngine;
 
-        public BilliardModel(IPhysicsEngine physicsEngine)
+        public BilliardGameModel(IPhysicsEngine physicsEngine)
         {
             _physicsEngine = physicsEngine;
         }
