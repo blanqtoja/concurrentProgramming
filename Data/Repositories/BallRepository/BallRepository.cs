@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
+using Data.Ball;
 
-namespace Data.BallRepository
+namespace Data.Repositories
 {
     public class BallRepository: IBallRepository
     {

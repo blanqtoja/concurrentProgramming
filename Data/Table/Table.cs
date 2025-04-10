@@ -14,6 +14,7 @@ namespace Data.Table
         public int Height { get; set; }
         public int MinWidth { get; set; }
         public int MinHeight { get; set; }
+        public int MinHight { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Table(int id, string color, int width, int hight, int minWidth, int minHight)
         {

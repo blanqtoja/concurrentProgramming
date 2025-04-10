@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using Model;
+using Data.Table;
 
-namespace Data.TableRepository
+namespace Data.Repositories
 {
     interface ITableRepository
     {
-        Table GetTableById(int id); 
+        ITable GetTableById(int id); 
     }
 }

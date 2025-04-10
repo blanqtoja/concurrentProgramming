@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml;
-using Model;
+using Data.Table;
 
-namespace Data.TableRepository
+namespace Data.Repositories
 {
     public class TableRepository: ITableRepository
     {
-        private List<Table> tables;
+        private List<ITable> tables;
 
-        public TableRepository(List<Table> Tables)
+        public TableRepository(List<ITable> Tables)
         {
             this.Tables = Tables;
         }
 
-        public List<Table> Tables { get => Tables; set => Tables = value; }
+        public List<ITable> Tables { get => Tables; set => Tables = value; }
 
-        public Table GetTableById(int id)
+        public ITable GetTableById(int id)
         {
             for (int i = 0; i < Tables.Count; i++)
             {
