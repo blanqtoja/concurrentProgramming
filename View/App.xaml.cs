@@ -11,6 +11,8 @@ namespace View;
 public partial class App : Application
 {
     private readonly NavigationStore _navigationStore;
+    private readonly GameStore _gameStore;
+
 
     public App()
     {
@@ -19,7 +21,7 @@ public partial class App : Application
 
     protected override void OnStartup(StartupEventArgs e)
     {
-        _navigationStore.CurrentViewModel = new ViewModel.StartViewModel(_navigationStore);
+        _navigationStore.CurrentViewModel = new ViewModel.StartViewModel(_gameStore, _navigationStore);
 
         MainWindow = new Views.MainWindow(_navigationStore)
         {

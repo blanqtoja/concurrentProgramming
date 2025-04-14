@@ -36,6 +36,5 @@ namespace Logic.Factories.TableFactory
             return new Table(id, color, width, height, minWidth, minHeight);
         }
     }
-    {
-    }
+    
 }

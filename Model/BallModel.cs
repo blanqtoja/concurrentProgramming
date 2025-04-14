@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Logic.BallLogic;
 
 namespace Model
 {
@@ -15,6 +16,17 @@ namespace Model
             Y = y;
             VelocityX = velocityX;
             VelocityY = velocityY;
+        }
+
+        public BallModel(SingleBallLogic ballLogic)
+        { 
+            Id = ballLogic.BallData.Id;
+            Radius = ballLogic.BallData.Radius;
+            Color = ballLogic.BallData.Color;
+            X = ballLogic.BallData.X;
+            Y = ballLogic.BallData.Y;
+            VelocityX = ballLogic.BallData.VelocityX;
+            VelocityY = ballLogic.BallData.VelocityY;
         }
 
         public int Id { get; }

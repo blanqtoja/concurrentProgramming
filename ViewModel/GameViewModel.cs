@@ -1,44 +1,48 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using Logic.Factories.BallFactory;
 using Logic.PhysicsEngines;
 using Model;
+using ViewModel.Stores;
 
 namespace ViewModel
 {
     public class GameViewModel : ViewModelBase
     {
-        // silnik fizyczny gry
-        private PhysicsEngine _physicsEngine;
+        private BilliardGameModel _gameModel; 
 
-        // ista przechowujaca wszystkie kule
-        private List<Ball> _balls = new List<Ball>();
+        //public GameViewModel(BilliardGameModel gameModel)
+        //{
+        //    _gameModel = gameModel;
+        //}
 
-        // stol
-        private Table _table;
-        // kula
-        private Ball _ball;
 
-        // obserwowalna lista kulek
-        public ObservableCollection<SingleBallViewModel> Circles { get; } = new ObservableCollection<SingleBallViewModel>();
+        private readonly GameStore _gameStore;
+
+        public string BallsCounter => _gameStore.BallsCounter;
+
+        public GameViewModel(GameStore gameStore, BilliardGameModel gameModel)
+        {
+            _gameModel = gameModel;
+
+            _gameStore = gameStore;
+            _gameStore.PropertyChanged += OnGameStoreChanged;
+        }
 
         public GameViewModel()
         {
+            _gameModel = new BilliardGameModel();
 
-            _table = new Table(300, 400, Color.GreenYellow);
-            _ball = BallFactory.MakeBall(0, 20, "#ffaaaa", 200, 150, 5, 2);
+            _gameStore = new GameStore();
+            _gameStore.PropertyChanged += OnGameStoreChanged;
+        }
 
-            _balls.Add(_ball);
-
-            _physicsEngine = new PhysicsEngine(_table, _balls);
-
-            // dodanie kulek do listy obserwowalnej
-            foreach (var ball in _balls)
-            {
-                Circles.Add(new SingleBallViewModel(ball));
-            }
-
+        private void OnGameStoreChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(GameStore.BallsCounter))
+                OnPropertyChanged(nameof(BallsCounter));
         }
 
     }

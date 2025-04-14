@@ -14,9 +14,8 @@ namespace Data.Table
         public int Height { get; set; }
         public int MinWidth { get; set; }
         public int MinHeight { get; set; }
-        public int MinHight { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public Table(int id, string color, int width, int hight, int minWidth, int minHight)
+        public Table(int id, string color, int width, int height, int minWidth, int minHeight)
         {
             Id = id;
 
@@ -28,18 +27,29 @@ namespace Data.Table
             Color = color;
 
             // Sprawdzenie poprawności szerokości i wysokości
-            if ( width < minWidth && hight < minHight)
+            if ( width < minWidth && height < minHeight)
             {
                 throw new ArgumentOutOfRangeException("Width and height must be greater than minimum values.");
             }
-            if (width <= 0 || hight <= 0)
+            if (width <= 0 || height <= 0)
             {
                 throw new ArgumentOutOfRangeException("Width and height must be higher than 0.");
             }   
             Width = width;
-            Hight = hight;
+            Height = height;
             MinWidth = minWidth;
-            MinHight = minHight;
+            MinHeight = minHeight;
+        }
+
+        public Table() 
+        {
+            Id = 0;
+            Color = "#00FF00";
+            Width = 800;
+            Height = 500;
+            MinHeight = 100;
+            MinWidth = 100;
+
         }
     }
 }

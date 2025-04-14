@@ -9,12 +9,16 @@ namespace Logic.PhysicsEngines
 {
     public class PhysicsEngine : IPhysicsEngine
     {
+        private IDataAPI _dataAPI;
+
         private readonly List<SingleBallLogic> _balls = new List<SingleBallLogic>(); // lista do odczytu
 
         public IReadOnlyList<SingleBallLogic> Balls => _balls.AsReadOnly(); // zwracamy liste tylko do odczytu
         public ITable Table { get; } // tylko do odczytu, hermetyzajca
 
-        public PhysicsEngine(Table table, IEnumerable<IBall> balls)
+        IReadOnlyList<IBall> IPhysicsEngine.Balls => throw new NotImplementedException();
+
+        public PhysicsEngine(ITable table, IEnumerable<IBall> balls)
         {
             Table = table;
 
@@ -24,6 +28,17 @@ namespace Logic.PhysicsEngines
                 _balls.Add(new SingleBallLogic(ball, table));
             }
         }
+
+        //public PhysicsEngine(IDataAPI dataAPI)
+        //{
+        //    _dataAPI = dataAPI;
+
+        //    // dodajemy kule do silnika fizycznego
+        //    foreach (IBall ball in balls)
+        //    {
+        //        _balls.Add(new SingleBallLogic(ball, table));
+        //    }
+        //}
 
         public void AddBall(IBall ball)
         {
@@ -64,7 +79,7 @@ namespace Logic.PhysicsEngines
             if (ball == null) return false;
 
             // czy pozycja kuli + jej promien sa mniejsze od 0 lub wieksze od wysokosci stolu
-            if(ball.Y - ball.BallData.Radius < 0 || ball.BallData.Y + ball.BallData.Radius > Table.Height)
+            if(ball.BallData.Y - ball.BallData.Radius < 0 || ball.BallData.Y + ball.BallData.Radius > Table.Height)
             {
                 return true;
             }
@@ -77,7 +92,7 @@ namespace Logic.PhysicsEngines
             if (ball == null) return false;
 
             // czy pozycja kuli + jej promien sa mniejsze od 0 lub wieksze od szerokosci stolu
-            if (ball.X - ball.BallData.Radius < 0 || ball.BallData.X + ball.BallData.Radius > Table.Width)
+            if (ball.BallData.X - ball.BallData.Radius < 0 || ball.BallData.X + ball.BallData.Radius > Table.Width)
             {
                 return true;
             }
@@ -125,6 +140,21 @@ namespace Logic.PhysicsEngines
             {
                 UpdateBallPosition(ball);
             }
+        }
+
+        public bool IsBallCollideHorizontalBand(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsBallCollideVerticalBand(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateBallPosition(IBall ball)
+        {
+            throw new NotImplementedException();
         }
     }
 }

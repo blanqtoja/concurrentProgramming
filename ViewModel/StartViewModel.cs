@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Model;
 using ViewModel.Stores;
 
+
 namespace ViewModel
 {
     // w tej klasie znaduje sie strona startowa
@@ -33,15 +34,15 @@ namespace ViewModel
         }
 
         private string _ballsCounter = "0";
-        public string BallsCounter
-        {
-            get => _ballsCounter;
-            set 
-            {
-                _ballsCounter = value;
-                OnPropertyChanged(nameof(BallsCounter));
-            }
-        }
+        //public string BallsCounter
+        //{
+        //    get => _ballsCounter;
+        //    set 
+        //    {
+        //        _ballsCounter = value;
+        //        OnPropertyChanged(nameof(BallsCounter));
+        //    }
+        //}
 
         private string _buttonText = "Start";
 
@@ -60,9 +61,35 @@ namespace ViewModel
         public ICommand IncrementCommand { get; }
         public ICommand DecrementCommand { get; }
 
-        public StartViewModel(NavigationStore navigationStore)
+        public StartViewModel(GameStore gameStore, NavigationStore navigationStore)
         {
-            StartCommand = new Commands.StartCommand(navigationStore);
+            StartCommand = new Commands.StartCommand(gameStore, navigationStore);
+        }
+
+        private readonly GameStore _gameStore;
+
+        public string BallsCounter
+        {
+            get => _gameStore.BallsCounter;
+            set
+            {
+                _gameStore.BallsCounter = value;
+                OnPropertyChanged(nameof(BallsCounter));
+            }
+        }
+
+        //public ICommand IncrementCommand { get; }
+
+        public StartViewModel(GameStore gameStore)
+        {
+            _gameStore = gameStore;
+            _gameStore.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(GameStore.BallsCounter))
+                    OnPropertyChanged(nameof(BallsCounter));
+            };
+
+            IncrementCommand = new IncrementBallsCommand(gameStore, this);
         }
     }
 }

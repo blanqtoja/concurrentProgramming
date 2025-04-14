@@ -8,15 +8,17 @@ namespace ViewModel.Commands
     public class StartCommand : CommandBase
     {
         private readonly NavigationStore _navigationStore;
+        private readonly GameStore _gameStore;
 
-        public StartCommand(NavigationStore navigationStore)
+        public StartCommand(GameStore gameStore, NavigationStore navigationStore)
         {
             _navigationStore = navigationStore;
+            _gameStore = gameStore;
         }
 
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = new GameViewModel();
+            _navigationStore.CurrentViewModel = new GameViewModel(_gameStore, new Model.BilliardGameModel());
         }
     }
 

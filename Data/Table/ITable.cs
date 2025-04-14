@@ -11,7 +11,7 @@ namespace Data.Table
         int Width { get; set; }
         int Height { get; set; }
         int MinWidth { get; set; }
-        int MinHight { get; set; }
+        int MinHeight { get; set; }
 
     }
 }
