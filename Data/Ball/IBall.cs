@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace Data.Ball
 {
-    public interface IBall
+    public interface IBall : INotifyPropertyChanged
     {
         int Id { get; }
         double Radius { get; set; }

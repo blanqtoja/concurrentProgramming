@@ -10,6 +10,10 @@ namespace Data
     {
         private GameData gameData;
         
+        public DataAPI(int amountBalls)
+        {
+            CreateGame(amountBalls);
+        }
         public GameData GameData { get { return gameData; } }
         public override void CreateGame(int amountBalls)
         {
@@ -24,13 +28,13 @@ namespace Data
             //return gameData;
         }
 
-        List<IBall> GetBalls()
+        public override List<IBall> GetBalls()
         {
             return gameData.getBalls();
 
         }
 
-        ITable GetTable() 
+        public override ITable GetTable() 
         {
             return GameData.getTable();
         }

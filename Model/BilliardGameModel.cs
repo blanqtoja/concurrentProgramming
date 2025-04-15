@@ -10,8 +10,8 @@ namespace Model
     // API
     public class BilliardGameModel
     {
-        private readonly IPhysicsEngine _physicsEngine;
-        private ObservableCollection<BallModel> BallModels {  get; }
+        private IPhysicsEngine _physicsEngine;
+        public ObservableCollection<BallModel> BallModels { get; set; }
 
         // DI API logiki
         //public BilliardGameModel(IPhysicsEngine physicsEngine)
@@ -23,14 +23,26 @@ namespace Model
         //        BallModels.Add(new BallModel(b));
         //    }
         //}
-        public BilliardGameModel()
+        public BilliardGameModel(int amountBalls)
         {
-            //_physicsEngine = physicsEngine;
-            //BallModels = new ObservableCollection<BallModel>();
-            //foreach (SingleBallLogic b in _physicsEngine.Balls)
-            //{
-            //    BallModels.Add(new BallModel(b));
-            //}
+            _physicsEngine = new PhysicsEngine(amountBalls);
+            BallModels = new ObservableCollection<BallModel>();
+            foreach (SingleBallLogic b in _physicsEngine.Balls)
+            {
+                BallModels.Add(new BallModel(b));
+            }
+            int i = 0;
+        }
+
+        // konstruktor z DI API
+        public BilliardGameModel(IPhysicsEngine physicsEngine)
+        {
+            _physicsEngine = physicsEngine;
+            BallModels = new ObservableCollection<BallModel>();
+            foreach (SingleBallLogic b in _physicsEngine.Balls)
+            {
+                BallModels.Add(new BallModel(b));
+            }
             int i = 0;
         }
         // drugi konstruktor przyjmujacy ilosc kul
@@ -44,9 +56,16 @@ namespace Model
         //    }
         //}
 
-        public void UpdateGame()
+        public void UpdateGame(int amountBalls)
         {
-            _physicsEngine.MoveBalls();
+            _physicsEngine.MoveBalls(amountBalls);
+            //BallModels = _physicsEngine.Balls;
+            BallModels.Clear();
+            foreach ( SingleBallLogic b in _physicsEngine.Balls)
+            {
+                BallModel model = new BallModel(b);
+                BallModels.Add(model);
+            }
         }
     }
 }

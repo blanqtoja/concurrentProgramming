@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ViewModel.Stores;
+using Model;
 
 namespace ViewModel.Commands
 {
     public class StartCommand : CommandBase
     {
-        private readonly NavigationStore _navigationStore;
-        private readonly GameStore _gameStore;
-
-        public StartCommand(GameStore gameStore, NavigationStore navigationStore)
+        private MainViewModel _srcViewModel;
+        public StartCommand(MainViewModel srcViewModel)
         {
-            _navigationStore = navigationStore;
-            _gameStore = gameStore;
+            _srcViewModel = srcViewModel;
         }
-
         public override void Execute(object parameter)
         {
-            _navigationStore.CurrentViewModel = new GameViewModel(_gameStore, new Model.BilliardGameModel());
+            // wystartowanie symulacji
+            int i = 0;
+            _srcViewModel.Update();
+
+            //_navigationStore.CurrentViewModel = new GameViewModel(_gameStore, new Model.BilliardGameModel());
         }
     }
 

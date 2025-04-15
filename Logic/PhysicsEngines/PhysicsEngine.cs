@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Data;
 using Data.Ball;
 using Data.Table;
@@ -11,56 +12,59 @@ namespace Logic.PhysicsEngines
     {
         private IDataAPI _dataAPI;
 
-        private readonly List<SingleBallLogic> _balls = new List<SingleBallLogic>(); // lista do odczytu
+        // sprawdzic czy nie bedize nullem
+        public List<SingleBallLogic> Balls { get; set; } 
 
-        public IReadOnlyList<SingleBallLogic> Balls => _balls.AsReadOnly(); // zwracamy liste tylko do odczytu
+        //public IReadOnlyList<SingleBallLogic> Balls => _balls.AsReadOnly(); // zwracamy liste tylko do odczytu
         public ITable Table { get; } // tylko do odczytu, hermetyzajca
 
-        IReadOnlyList<IBall> IPhysicsEngine.Balls => throw new NotImplementedException();
+        //IReadOnlyList<SingleBallLogic> IPhysicsEngine.Balls => _balls.AsReadOnly();
 
-        public PhysicsEngine(ITable table, IEnumerable<IBall> balls)
+        public PhysicsEngine(int amountBalls)
         {
-            Table = table;
+            _dataAPI = DataAPI.GetDataAPI(amountBalls);
 
             // dodajemy kule do silnika fizycznego
-            foreach (IBall ball in balls)
+            ITable table = _dataAPI.GetTable();
+            foreach (IBall ball in _dataAPI.GetBalls())
             {
-                _balls.Add(new SingleBallLogic(ball, table));
+                Balls.Add(new SingleBallLogic(ball, table));
             }
         }
 
-        //public PhysicsEngine(IDataAPI dataAPI)
-        //{
-        //    _dataAPI = dataAPI;
+        public PhysicsEngine(IDataAPI dataAPI)
+        {
+            _dataAPI = dataAPI;
 
-        //    // dodajemy kule do silnika fizycznego
-        //    foreach (IBall ball in balls)
-        //    {
-        //        _balls.Add(new SingleBallLogic(ball, table));
-        //    }
-        //}
+            // dodajemy kule do silnika fizycznego
+            ITable table = _dataAPI.GetTable();
+            foreach (IBall ball in _dataAPI.GetBalls())
+            {
+                Balls.Add(new SingleBallLogic(ball, table));
+            }
+        }
 
         public void AddBall(IBall ball)
         {
-            _balls.Add(new SingleBallLogic(ball, this.Table));
+            Balls.Add(new SingleBallLogic(ball, this.Table));
         }
 
         public void AddBall(SingleBallLogic ball)
         {
-            _balls.Add(ball);
+            Balls.Add(ball);
         }
 
         public void RemoveBall(int id)
         {
             // najpierw znajdujemy kule
-            SingleBallLogic ball = _balls.Find(b => b.BallData.Id == id);
+            SingleBallLogic ball = Balls.Find(b => b.BallData.Id == id);
             if (ball != null)
             {
-                _balls.Remove(ball);
+                Balls.Remove(ball);
             }
         }
 
-        public bool IsBallsCollide(int id1, int id2)
+        /*public bool IsBallsCollide(int id1, int id2)
         {
             SingleBallLogic ball1 = _balls.Find(b => b.BallData.Id == id1);
             SingleBallLogic ball2 = _balls.Find(b => b.BallData.Id == id2);
@@ -71,6 +75,27 @@ namespace Logic.PhysicsEngines
 
             // sprawdzamy czy odleglosc jest mniejsza od sumy promieni kul
             return distance <= (ball1.BallData.Radius + ball2.BallData.Radius);
+        }*/
+
+        public bool IsBallsCollide(SingleBallLogic ball)
+        {
+            
+            if (ball == null) return false;
+
+            foreach (SingleBallLogic b in Balls)
+            {
+                if (ball.BallData == ball) continue;
+                // liczymy odleglosc od srodkow obu kul, wykorzystujemy wzor Pitagorasa
+                double distance = Math.Sqrt(Math.Pow(ball.BallData.X - b.BallData.X, 2) + Math.Pow(ball.BallData.Y - b.BallData.Y, 2));
+
+                // sprawdzamy czy odleglosc jest mniejsza od sumy promieni kul
+                if (distance <= (ball.BallData.Radius + b.BallData.Radius))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool IsBallCollideHorizontalBand(SingleBallLogic ball)
@@ -100,22 +125,7 @@ namespace Logic.PhysicsEngines
             return false;
 
         }
-        private void UpdateBallPosition(SingleBallLogic ball)
-        {
-            //IBall ball = findBall(id);
-
-            if (ball == null) return;
-
-            ball.BallData.X += ball.BallData.VelocityX;
-            ball.BallData.Y += ball.BallData.VelocityY;
-
-            HandleCollisions(ball);
-        }
-
-        //private IBall findBall(int id)
-        //{
-        //    return _balls.Find(b => b.Id == id);
-        //}
+        
 
         private void HandleCollisions(SingleBallLogic ball)
         {
@@ -132,29 +142,48 @@ namespace Logic.PhysicsEngines
             }
         }
 
-
-        // ruch wszystkich kul
-        public void MoveBalls()
+        public void UpdateBallPosition(SingleBallLogic ball)
         {
-            foreach (SingleBallLogic ball in _balls)
+
+            if (ball == null) return;
+
+            // przemyslec czy najpierw dodac predkosc a potem prawdzic czy odwrotnie
+            ball.BallData.X += ball.BallData.VelocityX;
+            ball.BallData.Y += ball.BallData.VelocityY;
+
+            HandleCollisions(ball);
+        }
+
+        public void CheckCollision(object sender, PropertyChangedEventArgs e)
+        {
+            SingleBallLogic ball = new SingleBallLogic((Ball)sender, Table);
+
+            if (e.PropertyName == nameof(ball.BallData.X) || e.PropertyName == nameof(ball.BallData.Y))
             {
                 UpdateBallPosition(ball);
+                IsBallCollideHorizontalBand(ball);
             }
         }
 
-        public bool IsBallCollideHorizontalBand(int id)
+        // ruch wszystkich kul
+        public void MoveBalls(int newAmountOfBalls)
         {
-            throw new NotImplementedException();
+
+            _dataAPI.CreateGame(newAmountOfBalls); // tworzymy game dla nowej ilosci kul
+            Balls.Clear();
+            foreach (IBall ball in _dataAPI.GetBalls())  // idizemy po kazdej kuli
+            {
+                Balls.Add(new SingleBallLogic(ball, Table)); // dodajemy kule logiki z kuli IBall
+                ball.PropertyChanged += CheckCollision; // dodajemy listenera
+            }
+
+
+            //foreach (SingleBallLogic ball in _balls)
+            //{
+            //    UpdateBallPosition(ball);
+            //}
         }
 
-        public bool IsBallCollideVerticalBand(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateBallPosition(IBall ball)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

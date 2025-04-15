@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -22,10 +23,10 @@ namespace Data.Ball
             Id = id;
             Radius = radius;
             // Sprawdzenie poprawności koloru
-            if (Regex.IsMatch(color, @"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"))
-            {
-                throw new ArgumentException("Invalid color format. Use hex format (#RRGGBB or #RGB).");
-            }
+            //if (Regex.IsMatch(color, @"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"))
+            //{
+            //    throw new ArgumentException("Invalid color format. Use hex format (#RRGGBB or #RGB).");
+            //}
             Color = color;
             // Sprawdzenie poprawności współrzędnych
             if (x < 0 || y < 0)
@@ -38,5 +39,7 @@ namespace Data.Ball
             VelocityX = velocityX;
             VelocityY = velocityY;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

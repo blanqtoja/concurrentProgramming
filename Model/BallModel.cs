@@ -1,40 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel;
 using Logic.BallLogic;
 
-namespace Model
+public class BallModel : INotifyPropertyChanged
 {
-    public class BallModel
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void OnPropertyChanged(string propertyName) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+    public int Id { get; }
+
+    private double radius;
+    public double Radius
     {
-        public BallModel(int id, double radius, string color, double x, double y, double velocityX, double velocityY)
+        get => radius;
+        set
         {
-            Id = id;
-            Radius = radius;
-            Color = color;
-            X = x;
-            Y = y;
-            VelocityX = velocityX;
-            VelocityY = velocityY;
+            if (radius != value)
+            {
+                radius = value;
+                OnPropertyChanged(nameof(Radius));
+            }
         }
+    }
 
-        public BallModel(SingleBallLogic ballLogic)
-        { 
-            Id = ballLogic.BallData.Id;
-            Radius = ballLogic.BallData.Radius;
-            Color = ballLogic.BallData.Color;
-            X = ballLogic.BallData.X;
-            Y = ballLogic.BallData.Y;
-            VelocityX = ballLogic.BallData.VelocityX;
-            VelocityY = ballLogic.BallData.VelocityY;
+    private string color;
+    public string Color
+    {
+        get => color;
+        set
+        {
+            if (color != value)
+            {
+                color = value;
+                OnPropertyChanged(nameof(Color));
+            }
         }
+    }
 
-        public int Id { get; }
-        public double Radius { get; set; }
-        public string Color { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double VelocityX { get; set; }
-        public double VelocityY { get; set; }
+    private double x;
+    public double X
+    {
+        get => x;
+        set
+        {
+            if (x != value)
+            {
+                x = value;
+                OnPropertyChanged(nameof(X));
+            }
+        }
+    }
+
+    private double y;
+    public double Y
+    {
+        get => y;
+        set
+        {
+            if (y != value)
+            {
+                y = value;
+                OnPropertyChanged(nameof(Y));
+            }
+        }
+    }
+
+    public double VelocityX { get; set; }
+    public double VelocityY { get; set; }
+
+    public BallModel(int id, double radius, string color, double x, double y, double velocityX, double velocityY)
+    {
+        Id = id;
+        Radius = radius;
+        Color = color;
+        X = x;
+        Y = y;
+        VelocityX = velocityX;
+        VelocityY = velocityY;
+    }
+
+    public BallModel(SingleBallLogic ballLogic)
+        : this(ballLogic.BallData.Id, ballLogic.BallData.Radius, ballLogic.BallData.Color,
+               ballLogic.BallData.X, ballLogic.BallData.Y,
+               ballLogic.BallData.VelocityX, ballLogic.BallData.VelocityY)
+    {
     }
 }
