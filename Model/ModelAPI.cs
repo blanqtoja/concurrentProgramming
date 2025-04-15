@@ -48,12 +48,7 @@ namespace Model
                 //var ballViewModel = new BallViewModel(ballLogic.BallData.X, ballLogic.BallData.Y, ballLogic.BallData.Radius);
                 //ballsViewModels.Add(ballViewModel);
             }
-            // uruchamiamy symulacje
-            for (int i = 0; i < 1000; i++)
-            {
-                MoveBalls(width, height);
-            }
-
+            
             return ballsLogic;
         }
     }

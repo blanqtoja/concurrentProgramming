@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.ComponentModel;
 using Data.Ball;
 using Logic.Factories.BallFactory;
 
@@ -7,11 +8,28 @@ namespace Logic.BallLogic
 {
     public class BallLogic : IBallLogic
     {
-        public IBall BallData { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        private IBall _ballData;
+        public IBall BallData
+        {
+            get => _ballData;
+            set
+            {
+                if (_ballData != value)
+                {
+                    _ballData = value;
+                    OnPropertyChanged(nameof(BallData));
+                }
+            }
+        }
         public BallLogic(IBall ball)
         {
             BallData = ball;
+            if (ball is INotifyPropertyChanged notifier)
+            {
+                notifier.PropertyChanged += (s, e) => OnPropertyChanged(nameof(BallData));
+            }
         }
 
         public BallLogic(int width, int height)
@@ -25,13 +43,34 @@ namespace Logic.BallLogic
             BallData.X += BallData.VelocityX;
             BallData.Y += BallData.VelocityY;
 
-            // sprawdzamy czy kula wyszla poza stół
+            //powiadomienie o zmianie pozycji
+            OnPropertyChanged(nameof(BallData));
+
+            //sprawdzamy czy kula wyszla poza stół
             if (!IsBallInTable(width, height))
             {
                 // zmieniamy kierunek ruchu kuli
-                BallData.VelocityX = -BallData.VelocityX;
-                BallData.VelocityY = -BallData.VelocityY;
+                //jesku odbija sie od pionowej sciany to zmieniamy predkosc X
+                if (BallData.X - BallData.Radius <= 0 || BallData.X + BallData.Radius >= width)
+                {
+                    BallData.VelocityX = -BallData.VelocityX;
+                }
+                //BallData.VelocityX = -BallData.VelocityX;
+                //jesli odbija sie od poziomej sciany to zmieniamy predkosc Y
+                if (BallData.Y - BallData.Radius <= 0 || BallData.Y + BallData.Radius >= height)
+                {
+                    BallData.VelocityY = -BallData.VelocityY;
+                }
+                //BallData.VelocityY = -BallData.VelocityY;
+                OnPropertyChanged(nameof(BallData));
+
             }
+
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         // tutaj uwzględniamy tylko pozycje kuli, bo rozpatrujemy pojedyncza kule
@@ -59,6 +98,9 @@ namespace Logic.BallLogic
                 BallData.VelocityY = -BallData.VelocityY;
                 otherBall.VelocityX = -otherBall.VelocityX;
                 otherBall.VelocityY = -otherBall.VelocityY;
+
+                OnPropertyChanged(nameof(BallData));
+
             }
         }
     }
