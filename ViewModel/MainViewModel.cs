@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,61 +9,77 @@ using System.Windows.Input;
 using Model;
 using ViewModel.Commands;
 
+
 namespace ViewModel
 {
-    //obsluga przelaczenstron w oknie
     public class MainViewModel : ViewModelBase
     {
-        
-        private BilliardGameModel modelAPI;
-        private ObservableCollection<BallModel> balls;
-
-        public MainViewModel() {
-
-            modelAPI = new BilliardGameModel(_ballsAmount);
+        private ModelAPI modelAPI;
+        public ICommand StartCommand { get; set; }
+        public ICommand StartSimulationCommand { get; set; }
+        public MainViewModel()
+        {
+            modelAPI = new ModelAPI();
+            ballAmount = 0;
             StartCommand = new StartCommand(this);
-            balls = new ObservableCollection<BallModel>();
+            StartSimulationCommand = new StartSimulationCommand(this);
+
         }
 
-        public ObservableCollection<BallModel> Balls
+
+        public void Start(object param)
         {
-            get { return balls; }
+            if (param is WindowSize size)
+            {
+                //modelAPI.Start(ballAmount, size.Width, size.Height);
+                var ballLogics = modelAPI.Start(ballAmount, size.Width, size.Height);
+
+                Balls.Clear();
+
+                foreach (var logic in ballLogics)
+                {
+                    var data = logic.BallData;
+                    var vm = new BallViewModel(data.X, data.Y, data.Radius);
+
+
+                    Balls.Add(vm);
+                }
+
+                
+            }
+        }
+        public void StartSimulation(object param)
+        {
+            if (param is WindowSize size)
+            {
+                while(true)
+                { 
+                    modelAPI.MoveBalls(size.Width, size.Height); 
+                    System.Threading.Thread.Sleep(100); // opóźnienie 100ms
+                }
+
+
+            }
+
+        }
+
+        private int ballAmount;
+
+        public string BallsAmount
+        {
+            get => ballAmount.ToString();
             set
             {
-                if (balls != value)
+                if (int.TryParse(value, out int newValue) && newValue != ballAmount)
                 {
-                    balls = value;
-                    OnPropertyChanged(nameof(Balls));
+                    ballAmount = newValue;
+                    OnPropertyChanged(nameof(BallsAmount));
                 }
             }
         }
 
-        private int _ballsAmount;
-        public int BallsAmount
-        {
-            get => _ballsAmount;
-            set
-            {
-                if (_ballsAmount != value)
-                {
-                    _ballsAmount = value;
-                    OnPropertyChanged(nameof(_ballsAmount));
-                }
-            }
-        }
+        // subskrybujemy zmiany w modelu
+        public ObservableCollection<BallViewModel> Balls { get; } = new ObservableCollection<BallViewModel>();
 
-        public ICommand StartCommand { get; }
-
-        public void Update()
-        {
-            modelAPI.UpdateGame(_ballsAmount);
-
-            Balls.Clear(); // czyści ObservableCollection
-            foreach (var ball in modelAPI.BallModels)
-            {
-                Balls.Add(ball); // dodaje nowe kule
-            }
-
-        }
     }
 }

@@ -18,13 +18,13 @@ namespace Data.Repositories
 
         public IBall GetBallById(int id)
         {
-            for (int i = 0; i < balls.Count; i++)
-            {
-                if (balls[i].Id == id)
-                {
-                    return balls[i];
-                }
-            }
+            //for (int i = 0; i < balls.Count; i++)
+            //{
+            //    if (balls[i].Id == id)
+            //    {
+            //        return balls[i];
+            //    }
+            //}
 
             return null;
         }

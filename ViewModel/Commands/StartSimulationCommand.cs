@@ -4,16 +4,16 @@ using System.Text;
 
 namespace ViewModel.Commands
 {
-    public class StartCommand : CommandBase
+    public class StartSimulationCommand : CommandBase
     {
         private MainViewModel _srcViewModel;
-        public StartCommand(MainViewModel srcViewModel)
+        public StartSimulationCommand(MainViewModel srcViewModel)
         {
             _srcViewModel = srcViewModel;
         }
         public override void Execute(object parameter)
         {
-            _srcViewModel.Start(parameter);
+            _srcViewModel.StartSimulation(parameter);
         }
     }
 

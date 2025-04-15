@@ -9,16 +9,8 @@ namespace View
         
         public MainWindow()
         {
-            //InitializeComponent();
             InitializeComponent();
-            DataContext = new MainViewModel();
-
-            Loaded += (s, e) =>
-            {
-                var vm = (MainViewModel)DataContext;
-                vm.BallsAmount = 3;
-                vm.Update();
-            };
+            
         }
 
     }
