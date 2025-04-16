@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Text;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -20,6 +21,16 @@ namespace ViewModel
         public ICommand StartSimulationCommand { get; set; }
 
         private DispatcherTimer _timer;
+
+        private bool _isSimulationRunning;
+        public bool IsSimulationRunning
+        {
+            get => _isSimulationRunning;
+            set
+            {
+                _isSimulationRunning = value;
+            }
+        }
 
         public MainViewModel()
         {
@@ -59,6 +70,16 @@ namespace ViewModel
 
             }
         }
+
+        public void Stop()
+        {
+            _timer.Stop();
+            Balls.Clear();
+            modelAPI = new ModelAPI();
+            ballAmount = 0;
+            OnPropertyChanged(nameof(BallsAmount));
+        }
+
         //public void StartSimulation(object param)
         //{
         //    if (param is WindowSize size)
@@ -89,17 +110,41 @@ namespace ViewModel
             }
         }
 
-        //private WindowSize _currentWindowSize;
-        //public WindowSize CurrentWindowSize
-        //{
-        //    get => _currentWindowSize;
-        //    set
-        //    {
-        //        _currentWindowSize = value;
-        //        OnPropertyChanged();
-        //        // Tutaj możesz dodać logikę reakcji na zmianę rozmiaru
-        //    }
-        //}
+        private WindowSize _currentWindowSize;
+        public WindowSize CurrentWindowSize
+        {
+            get => _currentWindowSize;
+            set
+            {
+                _currentWindowSize = value;
+                OnPropertyChanged(nameof(CurrentWindowSize)); // Tutaj podajemy nazwę właściwości
+                                                              // Dodatkowa logika reakcji na zmianę rozmiaru
+                HandleWindowSizeChanged(value);
+            }
+        }
+        private void HandleWindowSizeChanged(WindowSize newSize)
+        {
+
+            // Przykład: możesz zatrzymać i uruchomić symulację od nowa
+            if (IsSimulationRunning)
+            {
+                Stop();
+                Start(newSize);
+            }
+        }
+
+        private WindowSize _windowSize;
+        public WindowSize WindowSize
+        {
+            get => _windowSize;
+            set
+            {
+                _windowSize = value;
+                OnPropertyChanged(nameof(WindowSize));
+                // Reakcja na zmianę rozmiaru
+            }
+        }
+
 
         // subskrybujemy zmiany w modelu
         public ObservableCollection<BallViewModel> Balls { get; } = new ObservableCollection<BallViewModel>();

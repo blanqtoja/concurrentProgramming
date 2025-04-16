@@ -40,27 +40,40 @@ namespace Logic.BallLogic
         public void MoveBall(int width, int height)
         {
             // aktualizujemy pozycje kuli
-            BallData.X += BallData.VelocityX;
-            BallData.Y += BallData.VelocityY;
+            double newX = BallData.X + BallData.VelocityX;
+            double newY = BallData.Y + BallData.VelocityY;
 
             //powiadomienie o zmianie pozycji
-            OnPropertyChanged(nameof(BallData));
+            //OnPropertyChanged(nameof(BallData));
 
             //sprawdzamy czy kula wyszla poza stół
             if (!IsBallInTable(width, height))
             {
                 // zmieniamy kierunek ruchu kuli
                 //jesku odbija sie od pionowej sciany to zmieniamy predkosc X
-                if (BallData.X - BallData.Radius <= 0 || BallData.X + BallData.Radius >= width)
+                if (newX - BallData.Radius <= 0)
                 {
+                    BallData.X = 0;
+                    BallData.Y += VelocityY;
+                    BallData.VelocityX = -BallData.VelocityX;
+
+                }
+                if (newX + BallData.Radius >= width)
+                {
+                    
+
                     BallData.VelocityX = -BallData.VelocityX;
                 }
                 //BallData.VelocityX = -BallData.VelocityX;
                 //jesli odbija sie od poziomej sciany to zmieniamy predkosc Y
-                if (BallData.Y - BallData.Radius <= 0 || BallData.Y + BallData.Radius >= height)
+                if (newY - BallData.Radius <= 0 || newY + BallData.Radius >= height)
                 {
                     BallData.VelocityY = -BallData.VelocityY;
                 }
+
+                // przesuniecie kuli tak zeby dotknela sciany
+                BallData.X = 
+                BallData.Y = 
                 //BallData.VelocityY = -BallData.VelocityY;
                 OnPropertyChanged(nameof(BallData));
 

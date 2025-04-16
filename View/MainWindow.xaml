@@ -7,19 +7,26 @@
         xmlns:local="clr-namespace:View"
         
         mc:Ignorable="d"
-        Title="Snooker" Height="450" Width="800">
+        Title="Snooker" Height="500" Width="800">
 
     <Window.Resources>
         <local:WindowSizeConverter x:Key="WindowSizeConverter"/>
+
+        <MultiBinding x:Key="WindowSizeBinding" Converter="{StaticResource WindowSizeConverter}">
+            <Binding RelativeSource="{RelativeSource Self}" Path="ActualWidth"/>
+            <Binding RelativeSource="{RelativeSource Self}" Path="ActualHeight"/>
+        </MultiBinding>
     </Window.Resources>
 
-    <Grid Background="#008800">
+
+
+        <Grid Background="#008800">
         <Grid.RowDefinitions>
             <RowDefinition Height="255*"/>
             <RowDefinition Height="179*"/>
         </Grid.RowDefinitions>
         <Grid.DataContext>
-            <vms:MainViewModel/>
+            <vms:MainViewModel WindowSize="{DynamicResource WindowSizeBinding}"/>
         </Grid.DataContext>
 
         
