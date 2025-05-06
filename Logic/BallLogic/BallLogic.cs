@@ -93,49 +93,44 @@ namespace Logic.BallLogic
         {
             if (!IsBallCollision(otherBall)) return;
 
-            // Pozycje
-            double dx = otherBall.X - BallData.X;
-            double dy = otherBall.Y - BallData.Y;
+            // Różnica pozycji i prędkości
+            double dx = BallData.X - otherBall.X;
+            double dy = BallData.Y - otherBall.Y;
             double distance = Math.Sqrt(dx * dx + dy * dy);
 
-            if (distance == 0) return; // unika dzielenia przez zero
-
-            // Jednostkowy wektor normalny zderzenia
+            // Normalizacja wektora różnicy pozycji
             double nx = dx / distance;
             double ny = dy / distance;
 
-            // Wektory prędkości
-            double v1x = BallData.VelocityX;
-            double v1y = BallData.VelocityY;
-            double v2x = otherBall.VelocityX;
-            double v2y = otherBall.VelocityY;
+            // Różnice prędkości
+            double dvx = BallData.VelocityX - otherBall.VelocityX;
+            double dvy = BallData.VelocityY - otherBall.VelocityY;
 
-            // Masa = promień
+            // Iloczyn skalarny różnicy prędkości i wektora normalnego
+            double dot = dvx * nx + dvy * ny;
+
+            // Jeżeli kule się oddalają, nie kolidują fizycznie
+            if (dot > 0) return;
+
+            // Masa = promień (dla uproszczenia)
             double m1 = BallData.Radius;
             double m2 = otherBall.Radius;
 
-            // Różnica prędkości
-            double dvx = v1x - v2x;
-            double dvy = v1y - v2y;
+            // Współczynnik sprężystości = 1 (sprężyste zderzenie)
+            double restitution = 1.0;
 
-            // Iloczyn skalarny różnicy prędkości i wektora normalnego
-            double dotProduct = dvx * nx + dvy * ny;
+            // Oblicz impuls
+            double impulse = (2 * dot) / (m1 + m2);
 
-            // Jeżeli kule się oddalają, nie przetwarzaj
-            if (dotProduct > 0) return;
-
-            // Współczynnik przeniesienia pędu
-            double impulse = (2 * dotProduct) / (m1 + m2);
-
-            // Nowe prędkości
+            // Zaktualizuj prędkości
             BallData.VelocityX -= impulse * m2 * nx;
             BallData.VelocityY -= impulse * m2 * ny;
-
             otherBall.VelocityX += impulse * m1 * nx;
             otherBall.VelocityY += impulse * m1 * ny;
 
             OnPropertyChanged(nameof(BallData));
         }
+
 
     }
 }
