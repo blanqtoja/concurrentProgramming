@@ -63,6 +63,8 @@ namespace ViewModel
                 }
             }
         }
+        public double Diameter => Radius * 2;
+
 
         private void OnBallLogicPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
