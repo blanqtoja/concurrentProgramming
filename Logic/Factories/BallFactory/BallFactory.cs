@@ -16,7 +16,7 @@ namespace Logic.Factories.BallFactory
         public static IBall CreateRandomBall(int maxX, int maxY)
         {
             Random random = new Random();
-            int radius = random.Next(10, 20);
+            int radius = random.Next(20, 40);
             int x = random.Next(radius, maxX-radius);
             int y = random.Next(radius, maxY-radius);
             int velocityX = random.Next(1, 10);
