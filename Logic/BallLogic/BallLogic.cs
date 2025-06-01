@@ -40,31 +40,32 @@ namespace Logic.BallLogic
         public void MoveBall(int width, int height)
         {
             // aktualizujemy pozycje kuli
-            BallData.X += BallData.VelocityX;
-            BallData.Y += BallData.VelocityY;
+            // BallData.X += BallData.VelocityX;
+            // BallData.Y += BallData.VelocityY;
+            BallData.Move(width, height);
 
             //powiadomienie o zmianie pozycji
             OnPropertyChanged(nameof(BallData));
 
             //sprawdzamy czy kula wyszla poza stół
-            if (!IsBallInTable(width, height))
-            {
-                // zmieniamy kierunek ruchu kuli
-                //jesku odbija sie od pionowej sciany to zmieniamy predkosc X
-                if (BallData.X - BallData.Radius <= 0 || BallData.X + BallData.Radius >= width)
-                {
-                    BallData.VelocityX = -BallData.VelocityX;
-                }
-                //BallData.VelocityX = -BallData.VelocityX;
-                //jesli odbija sie od poziomej sciany to zmieniamy predkosc Y
-                if (BallData.Y - BallData.Radius <= 0 || BallData.Y + BallData.Radius >= height)
-                {
-                    BallData.VelocityY = -BallData.VelocityY;
-                }
-                //BallData.VelocityY = -BallData.VelocityY;
-                OnPropertyChanged(nameof(BallData));
+            // if (!IsBallInTable(width, height))
+            // {
+            //     // zmieniamy kierunek ruchu kuli
+            //     //jesku odbija sie od pionowej sciany to zmieniamy predkosc X
+            //     if (BallData.X - BallData.Radius <= 0 || BallData.X + BallData.Radius >= width)
+            //     {
+            //         BallData.VelocityX = -BallData.VelocityX;
+            //     }
+            //     //BallData.VelocityX = -BallData.VelocityX;
+            //     //jesli odbija sie od poziomej sciany to zmieniamy predkosc Y
+            //     if (BallData.Y - BallData.Radius <= 0 || BallData.Y + BallData.Radius >= height)
+            //     {
+            //         BallData.VelocityY = -BallData.VelocityY;
+            //     }
+            //     //BallData.VelocityY = -BallData.VelocityY;
+            //     OnPropertyChanged(nameof(BallData));
 
-            }
+            // }
 
         }
 

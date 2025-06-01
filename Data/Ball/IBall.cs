@@ -13,6 +13,7 @@ namespace Data.Ball
         double VelocityX { get; set; }
         double VelocityY { get; set; }
 
+        void Move(double width, double height);
 
     }
 }

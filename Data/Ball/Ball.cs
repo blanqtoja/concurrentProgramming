@@ -27,5 +27,21 @@ namespace Data.Ball
             VelocityY = velocityY;
         }
 
+
+        public void Move(double width, double height)
+        {
+            X += VelocityX;
+            Y += VelocityY;
+
+            if (X - Radius < 0 || X + Radius > width)
+            {
+                VelocityX = -VelocityX;
+            }
+
+            if (Y - Radius < 0 || Y + Radius > height)
+            {
+                VelocityY = -VelocityY;
+            }        
+        }
     }
 }
