@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:View"
         
         mc:Ignorable="d"
-        Title="Snooker" Height="450" Width="800">
+        Title="Snooker" Height="800" Width="1000">
 
     <Window.Resources>
         <local:WindowSizeConverter x:Key="WindowSizeConverter"/>
@@ -22,10 +22,10 @@
             <vms:MainViewModel/>
         </Grid.DataContext>
 
-        
 
 
-        <Canvas Grid.RowSpan="2">
+
+        <Canvas Grid.RowSpan="2" Width="1000" >
 
             <ItemsControl  ItemsSource="{Binding Balls}">
                 <!-- tutaj renderujemy elipsy -->
@@ -52,35 +52,18 @@
 
         </Canvas>
 
-        <Grid VerticalAlignment="Bottom" Grid.Column="2" Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
-                <TextBox HorizontalAlignment="Center" VerticalAlignment="Top" TextWrapping="Wrap" Width="120" Text="{Binding Path=BallsAmount, Mode=TwoWay}" Margin="0,161,0,0" Grid.Row="1"/>
+        <TextBox HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap" Width="120" Text="{Binding Path=BallsAmount, Mode=TwoWay}" Margin="397,283,0,0" Grid.Row="1"/>
 
-            </Grid>
-            <Grid Grid.Column="1">
-                <Button HorizontalAlignment="Center" VerticalAlignment="Top" Content="Start" Command="{Binding StartCommand}" Margin="0,159,0,0" Grid.Row="1">
-                    <Button.CommandParameter>
-                        <MultiBinding Converter="{StaticResource WindowSizeConverter}">
-                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="ActualWidth"/>
-                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="ActualHeight"/>
-                        </MultiBinding>
-                    </Button.CommandParameter>
-                </Button>
-                <Button HorizontalAlignment="Center" VerticalAlignment="Top" Content="SIMULATION" Command="{Binding StartSimulationCommand}" Margin="200,159,0,0" Grid.Row="1">
-                    <Button.CommandParameter>
-                        <MultiBinding Converter="{StaticResource WindowSizeConverter}">
-                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="ActualWidth"/>
-                            <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="ActualHeight"/>
-                        </MultiBinding>
-                    </Button.CommandParameter>
-                </Button>
-            </Grid>
-        </Grid>
+        <Button HorizontalAlignment="Left" VerticalAlignment="Top" Content="Start" Command="{Binding StartCommand}" Margin="543,271,0,0" Grid.Row="1" Height="42" Width="56">
+            <Button.CommandParameter>
+                <MultiBinding Converter="{StaticResource WindowSizeConverter}">
+                    <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="ActualWidth"/>
+                    <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="ActualHeight"/>
+                </MultiBinding>
+            </Button.CommandParameter>
+        </Button>
     </Grid>
+
 
 </Window>

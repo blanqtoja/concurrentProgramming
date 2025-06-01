@@ -104,8 +104,8 @@ namespace Logic.BallLogic
             double ny = dy / distance;
 
             // Różnice prędkości
-            double dvx = BallData.VelocityX - otherBall.VelocityX;
-            double dvy = BallData.VelocityY - otherBall.VelocityY;
+            double dvx = BallData.VelX - otherBall.VelX;
+            double dvy = BallData.VelY - otherBall.VelY;
 
             // Iloczyn skalarny różnicy prędkości i wektora normalnego
             double dot = dvx * nx + dvy * ny;
@@ -124,10 +124,14 @@ namespace Logic.BallLogic
             double impulse = (2 * dot) / (m1 + m2);
 
             // Zaktualizuj prędkości
-            BallData.VelocityX -= impulse * m2 * nx;
-            BallData.VelocityY -= impulse * m2 * ny;
-            otherBall.VelocityX += impulse * m1 * nx;
-            otherBall.VelocityY += impulse * m1 * ny;
+            // BallData.VelX - impulse * m2 * nx;
+            // BallData.VelY - impulse * m2 * ny;
+
+            BallData.UpdateVelocity(BallData.VelX - impulse * m2 * nx, BallData.VelY - impulse * m2 * ny);
+            otherBall.UpdateVelocity(otherBall.VelX + impulse * m1 * nx, otherBall.VelY + impulse * m1 * ny);
+
+            // otherBall.VelocityX += impulse * m1 * nx;
+            // otherBall.VelocityY += impulse * m1 * ny;
 
             OnPropertyChanged(nameof(BallData));
         }
