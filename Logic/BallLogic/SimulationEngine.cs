@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Timers;
 using Logic.BallLogic;
+using System.Threading.Tasks;
 
 namespace Logic
 {
@@ -25,22 +26,40 @@ namespace Logic
         public void Start() => _timer.Start();
         public void Stop() => _timer.Stop();
 
+        // private void OnTick(object sender, ElapsedEventArgs e)
+        // {
+        //     lock (_balls)
+        //     {
+        //         foreach (var ball in _balls)
+        //         {
+        //             ball.MoveBall(_width, _height);
+        //         }
+
+        //         for (int i = 0; i < _balls.Count; i++)
+        //         {
+        //             for (int j = i + 1; j < _balls.Count; j++)
+        //             {
+        //                 _balls[i].HandleCollision(_balls[j].BallData);
+        //             }
+        //         }
+        //     }
+        // }
         private void OnTick(object sender, ElapsedEventArgs e)
         {
             lock (_balls)
             {
-                foreach (var ball in _balls)
+                Parallel.For(0, _balls.Count, i =>
                 {
-                    ball.MoveBall(_width, _height);
-                }
+                    _balls[i].MoveBall(_width, _height);
+                });
 
-                for (int i = 0; i < _balls.Count; i++)
+                Parallel.For(0, _balls.Count, i =>
                 {
                     for (int j = i + 1; j < _balls.Count; j++)
                     {
                         _balls[i].HandleCollision(_balls[j].BallData);
                     }
-                }
+                });
             }
         }
     }
