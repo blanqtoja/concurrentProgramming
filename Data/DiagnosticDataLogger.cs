@@ -15,7 +15,7 @@ namespace Data
         {
             _filePath = filePath ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "diagnostic_data.csv");
             
-            // Inicjalizacja pliku z nagłówkami
+            //tworzenie pliku z naglowkami
             if (!File.Exists(_filePath))
             {
                 lock (_lockObject)

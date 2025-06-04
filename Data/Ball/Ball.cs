@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
+using System.Threading;
 
 namespace Data.Ball
 {
     public class Ball : IBall
     {
-        private static readonly DiagnosticDataLogger _logger = new DiagnosticDataLogger();
+        // private static readonly DiagnosticDataLogger _logger = new DiagnosticDataLogger();
         private static readonly object _logLock = new object();
         private static readonly object _stateLock = new object();
         
@@ -47,8 +49,10 @@ namespace Data.Ball
             VelocityX = velocityX;
             VelocityY = velocityY;
             
-            // Logowanie utworzenia nowej piłki
-            LogBallState("Created");
+            // logowanie utworzenia nowej kuli
+            QueueAction("Created");
+
+            LogBallState();
         }
 
 
@@ -78,48 +82,61 @@ namespace Data.Ball
                     collisionOccurred = true;
                 }
                 
-                // Logowanie tylko gdy nastąpiła kolizja lub co 10 ruchów
+                // log tylko przy kolizji
                 if (collisionOccurred)
                 {
-                    LogBallState("Collision");
+                    QueueAction("Collision");
                 }
-                else if (Random.Next(10) == 0)
-                {
-                    LogBallState("Move");
-                }
+                // else if (Random.Next(10) == 0)
+                // {
+                //     LogBallState("Move");
+                // }
             }
         }
         
-        private void LogBallState(string action)
+        private BlockingCollection<string> actionQueue = new BlockingCollection<string>();
+
+        private void QueueAction(string action)
         {
-            try
+            actionQueue.Add(action);
+        }
+
+        private void LogBallState()
+        {
+            Thread logThread = new Thread(() =>
             {
-                lock (_logLock)
+                foreach (var action in actionQueue.GetConsumingEnumerable())
                 {
-                    string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ball_movements.csv");
-                    bool fileExists = File.Exists(logFilePath);
-                    
-                    using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                    try
                     {
-                        if (!fileExists)
+                        lock (_logLock)
                         {
-                            writer.WriteLine("Timestamp,Action,BallHashCode,X,Y,VelocityX,VelocityY,Radius");
+                            string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ball_collisions.csv");
+                            bool fileExists = File.Exists(logFilePath);
+
+                            using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                            {
+                                if (!fileExists)
+                                {
+                                    writer.WriteLine("Timestamp,Action,BallHashCode,X,Y,VelocityX,VelocityY,Radius");
+                                }
+
+                                string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                                writer.WriteLine($"{timestamp},{action},{this.GetHashCode()},{X},{Y},{VelocityX},{VelocityY},{Radius}");
+                            }
                         }
-                        
-                        string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                        writer.WriteLine($"{timestamp},{action},{this.GetHashCode()},{X},{Y},{VelocityX},{VelocityY},{Radius}");
+                    }
+                    catch (Exception ex)
+                    {
+                        string errorFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "error.log");
+                        using (StreamWriter errorWriter = new StreamWriter(errorFilePath, true))
+                        {
+                            errorWriter.WriteLine($"{DateTime.Now}: Error logging ball state: {ex.Message}");
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                // W przypadku błędu zapisu, zapisz informację o błędzie do pliku error.log
-                string errorFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "error.log");
-                using (StreamWriter errorWriter = new StreamWriter(errorFilePath, true))
-                {
-                    errorWriter.WriteLine($"{DateTime.Now}: Error logging ball state: {ex.Message}");
-                }
-            }
+            });
+            logThread.Start();
         }
 
         public void UpdateVelocity(double velocityX, double velocityY)
