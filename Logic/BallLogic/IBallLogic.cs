@@ -11,6 +11,6 @@ namespace Logic.BallLogic
         IBall BallData { get; set; }
 
         void MoveBall(int width, int height);
-        void HandleCollision(IBall otherBall);
+        List<ILogBallEntry> HandleCollision(IBall otherBall);
     }
 }

@@ -1,37 +1,14 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.IO;
-using System.Threading;
 
 namespace Data.Ball
 {
     public class Ball : IBall
     {
-        // private static readonly DiagnosticDataLogger _logger = new DiagnosticDataLogger();
-        private static readonly object _logLock = new object();
-        private static readonly object _stateLock = new object();
-        
         public double Radius { get; set; }
-        
-        private double _x;
-        public double X
-        {
-            get { lock (_stateLock) { return _x; } }
-            set { lock (_stateLock) { _x = value; } }
-        }
-        
-        private double _y;
-        public double Y
-        {
-            get { lock (_stateLock) { return _y; } }
-            set { lock (_stateLock) { _y = value; } }
-        }
-        
-        private double VelocityX { get; set; }
-        private double VelocityY { get; set; }
-
-        public double VelX => VelocityX;
-        public double VelY => VelocityY;
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double VelocityX { get; set; }
+        public double VelocityY { get; set; }
 
         private static readonly Random Random = new Random();
 
@@ -48,104 +25,60 @@ namespace Data.Ball
             
             VelocityX = velocityX;
             VelocityY = velocityY;
-            
-            // logowanie utworzenia nowej kuli
-            QueueAction("Created");
-
-            LogBallState();
         }
 
-
-        public void Move(double width, double height)
+        public ILogBallEntry CreateLogEntry()
         {
-            lock (_stateLock)
+            return new LogBallEntry
             {
-                double oldX = X;
-                double oldY = Y;
-                double oldVelocityX = VelocityX;
-                double oldVelocityY = VelocityY;
-                
-                _x += VelocityX;
-                _y += VelocityY;
+                Date = DateTime.Now,
+                Ball1Radius = Radius,
+                Ball1X = X, 
+                Ball1Y = Y,
+                Ball1VelX = VelocityX,
+                Ball1VelY = VelocityY,
+            };
 
-                bool collisionOccurred = false;
-                
-                if (_x < 0 || _x + 2 * Radius > width)
-                {
-                    VelocityX = -VelocityX;
-                    collisionOccurred = true;
-                }
+        
+        }
 
-                if (_y < 0 || _y + 2 * Radius > height)
-                {
-                    VelocityY = -VelocityY;
-                    collisionOccurred = true;
-                }
+        public void Move(int width, int height)
+        {
+            // aktualizujemy pozycje kuli
+            X += VelocityX;
+            Y += VelocityY;
+
+            ////powiadomienie o zmianie pozycji
+            //OnPropertyChanged(nameof(this));
+
+
+            // Odbicie od lewej/prawej ściany
+            if (X - Radius < 0)
+            {
+                // Console.WriteLine(X);
+                X = Radius; // Korekta pozycji
+                VelocityX = -VelocityX;
                 
-                // log tylko przy kolizji
-                if (collisionOccurred)
-                {
-                    QueueAction("Collision");
-                }
-                // else if (Random.Next(10) == 0)
-                // {
-                //     LogBallState("Move");
-                // }
+            }
+            else if (X + 2 * Radius > width)
+            {
+                X = width -  2* Radius; // Korekta pozycji
+                VelocityX = -VelocityX;
+                
+            }
+
+            // Odbicie od górnej/dolnej ściany
+            if (Y - Radius < 0)
+            {
+                Y = Radius; // Korekta pozycji
+                VelocityY = -VelocityY;
+                
+            }
+            else if (Y + 2 * Radius > height)
+            {
+                Y = height - 2 * Radius; // Korekta pozycji
+                VelocityY = -VelocityY;
             }
         }
-        
-        private BlockingCollection<string> actionQueue = new BlockingCollection<string>();
-
-        private void QueueAction(string action)
-        {
-            actionQueue.Add(action);
-        }
-
-        private void LogBallState()
-        {
-            Thread logThread = new Thread(() =>
-            {
-                foreach (var action in actionQueue.GetConsumingEnumerable())
-                {
-                    try
-                    {
-                        lock (_logLock)
-                        {
-                            string logFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ball_collisions.csv");
-                            bool fileExists = File.Exists(logFilePath);
-
-                            using (StreamWriter writer = new StreamWriter(logFilePath, true))
-                            {
-                                if (!fileExists)
-                                {
-                                    writer.WriteLine("Timestamp,Action,BallHashCode,X,Y,VelocityX,VelocityY,Radius");
-                                }
-
-                                string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                                writer.WriteLine($"{timestamp},{action},{this.GetHashCode()},{X},{Y},{VelocityX},{VelocityY},{Radius}");
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        string errorFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "error.log");
-                        using (StreamWriter errorWriter = new StreamWriter(errorFilePath, true))
-                        {
-                            errorWriter.WriteLine($"{DateTime.Now}: Error logging ball state: {ex.Message}");
-                        }
-                    }
-                }
-            });
-            logThread.Start();
-        }
-
-        public void UpdateVelocity(double velocityX, double velocityY)
-        {
-            VelocityX = velocityY;
-            VelocityY = velocityY;
-        }
     }
-
-   
-
 }

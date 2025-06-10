@@ -10,10 +10,10 @@ namespace Data.Ball
         double Radius { get; set; }
         double X { get; set; }
         double Y { get; set; }
-        double VelX { get; }
-        double VelY { get;}
+        double VelocityX { get; set; }
+        double VelocityY { get; set; }
 
-        void Move(double width, double height);
-        void UpdateVelocity(double velocityX, double velocityY);
+        ILogBallEntry CreateLogEntry();
+        void Move(int width, int height);
     }
 }

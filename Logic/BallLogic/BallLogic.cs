@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using Data.Ball;
 using Logic.Factories.BallFactory;
@@ -11,6 +11,7 @@ namespace Logic.BallLogic
         public event PropertyChangedEventHandler PropertyChanged;
 
         private IBall _ballData;
+        private readonly SimulationEngine _engine;
         public IBall BallData
         {
             get => _ballData;
@@ -39,35 +40,51 @@ namespace Logic.BallLogic
 
         public void MoveBall(int width, int height)
         {
-            // aktualizujemy pozycje kuli
-            // BallData.X += BallData.VelocityX;
-            // BallData.Y += BallData.VelocityY;
             BallData.Move(width, height);
-
-            //powiadomienie o zmianie pozycji
             OnPropertyChanged(nameof(BallData));
 
-            //sprawdzamy czy kula wyszla poza stół
-            // if (!IsBallInTable(width, height))
-            // {
-            //     // zmieniamy kierunek ruchu kuli
-            //     //jesku odbija sie od pionowej sciany to zmieniamy predkosc X
-            //     if (BallData.X - BallData.Radius <= 0 || BallData.X + BallData.Radius >= width)
-            //     {
-            //         BallData.VelocityX = -BallData.VelocityX;
-            //     }
-            //     //BallData.VelocityX = -BallData.VelocityX;
-            //     //jesli odbija sie od poziomej sciany to zmieniamy predkosc Y
-            //     if (BallData.Y - BallData.Radius <= 0 || BallData.Y + BallData.Radius >= height)
-            //     {
-            //         BallData.VelocityY = -BallData.VelocityY;
-            //     }
-            //     //BallData.VelocityY = -BallData.VelocityY;
-            //     OnPropertyChanged(nameof(BallData));
-
-            // }
-
         }
+        //public void MoveBall(int width, int height)
+        //{
+
+        //    // aktualizujemy pozycje kuli
+        //    BallData.X += BallData.VelocityX;
+        //    BallData.Y += BallData.VelocityY;
+
+        //    //powiadomienie o zmianie pozycji
+        //    OnPropertyChanged(nameof(BallData));
+
+
+        //    // Odbicie od lewej/prawej ściany
+        //    if (BallData.X - BallData.Radius < 0)
+        //    {
+        //        // Console.WriteLine(BallData.X);
+        //        BallData.X = BallData.Radius; // Korekta pozycji
+        //        BallData.VelocityX = -BallData.VelocityX;
+                
+        //    }
+        //    else if (BallData.X + 2 * BallData.Radius > width)
+        //    {
+        //        BallData.X = width -  2* BallData.Radius; // Korekta pozycji
+        //        BallData.VelocityX = -BallData.VelocityX;
+                
+        //    }
+
+        //    // Odbicie od górnej/dolnej ściany
+        //    if (BallData.Y - BallData.Radius < 0)
+        //    {
+        //        BallData.Y = BallData.Radius; // Korekta pozycji
+        //        BallData.VelocityY = -BallData.VelocityY;
+                
+        //    }
+        //    else if (BallData.Y + 2 * BallData.Radius > height)
+        //    {
+        //        BallData.Y = height - 2 * BallData.Radius; // Korekta pozycji
+        //        BallData.VelocityY = -BallData.VelocityY;
+        //    }
+            
+            
+        //}
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -90,9 +107,14 @@ namespace Logic.BallLogic
         }
 
         // sprawdzamy czy kula This zderza sie z inna kula otherBall oraz zmieniamy kierunek ruchu OBU KUL
-        public void HandleCollision(IBall otherBall)
+        //public void HandleCollision(IBall otherBall)
+
+        //zwraca listę czterech ILogBallEntry
+        public List<ILogBallEntry> HandleCollision(IBall otherBall)
         {
-            if (!IsBallCollision(otherBall)) return;
+            if (!IsBallCollision(otherBall)) return null;
+
+            List<ILogBallEntry> logs = new List<ILogBallEntry>();
 
             // Różnica pozycji i prędkości
             double dx = BallData.X - otherBall.X;
@@ -104,14 +126,14 @@ namespace Logic.BallLogic
             double ny = dy / distance;
 
             // Różnice prędkości
-            double dvx = BallData.VelX - otherBall.VelX;
-            double dvy = BallData.VelY - otherBall.VelY;
+            double dvx = BallData.VelocityX - otherBall.VelocityX;
+            double dvy = BallData.VelocityY - otherBall.VelocityY;
 
             // Iloczyn skalarny różnicy prędkości i wektora normalnego
             double dot = dvx * nx + dvy * ny;
 
             // Jeżeli kule się oddalają, nie kolidują fizycznie
-            if (dot > 0) return;
+            if (dot > 0) return null;
 
             // Masa = promień (dla uproszczenia)
             double m1 = BallData.Radius;
@@ -123,17 +145,27 @@ namespace Logic.BallLogic
             // Oblicz impuls
             double impulse = (2 * dot) / (m1 + m2);
 
+
+            ILogBallEntry logDataBallEntryBefore = BallData.CreateLogEntry();
+            ILogBallEntry logOtherBallEntryBefore = BallData.CreateLogEntry();
+
             // Zaktualizuj prędkości
-            // BallData.VelX - impulse * m2 * nx;
-            // BallData.VelY - impulse * m2 * ny;
-
-            BallData.UpdateVelocity(BallData.VelX - impulse * m2 * nx, BallData.VelY - impulse * m2 * ny);
-            otherBall.UpdateVelocity(otherBall.VelX + impulse * m1 * nx, otherBall.VelY + impulse * m1 * ny);
-
-            // otherBall.VelocityX += impulse * m1 * nx;
-            // otherBall.VelocityY += impulse * m1 * ny;
+            BallData.VelocityX -= impulse * m2 * nx;
+            BallData.VelocityY -= impulse * m2 * ny;
+            otherBall.VelocityX += impulse * m1 * nx;
+            otherBall.VelocityY += impulse * m1 * ny;
 
             OnPropertyChanged(nameof(BallData));
+
+            ILogBallEntry logDataBallEntryAfter = BallData.CreateLogEntry();
+            ILogBallEntry logOtherBallEntryAfter = BallData.CreateLogEntry();
+
+            logs.Add(logDataBallEntryBefore);
+            logs.Add(logOtherBallEntryBefore);
+            logs.Add(logDataBallEntryAfter);
+            logs.Add(logDataBallEntryAfter);
+
+            return logs;
         }
 
 
