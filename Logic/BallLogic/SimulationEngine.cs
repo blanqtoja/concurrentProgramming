@@ -92,7 +92,7 @@ namespace Logic
                 {
                     if (!fileExists)
                     {
-                        writer.WriteLine("Date,Radius,X,Y,VelocityX,VelocityY,Event");
+                        writer.WriteLine("Date|Radius|X|Y|VelocityX|VelocityY|Event");
                     }
 
                     foreach (var item in logQueue.GetConsumingEnumerable())
