@@ -100,15 +100,15 @@ namespace Logic
                         StringBuilder sb = new StringBuilder();
                         sb.Append($"{item.Date:yyyy-MM-dd HH:mm:ss.fff}");
 
-                        sb.Append($",{item.Ball1Radius.ToString()}");
+                        sb.Append($"|{item.Ball1Radius.ToString()}");
 
-                        sb.Append($",{item.Ball1X.ToString() ?? ""}");
-                        sb.Append($",{item.Ball1Y.ToString()}");
+                        sb.Append($"|{item.Ball1X.ToString() ?? ""}");
+                        sb.Append($"|{item.Ball1Y.ToString()}");
 
-                        sb.Append($",{item.Ball1VelX.ToString() ?? ""}");
-                        sb.Append($",{item.Ball1VelY.ToString()}");
+                        sb.Append($"|{item.Ball1VelX.ToString() ?? ""}");
+                        sb.Append($"|{item.Ball1VelY.ToString()}");
 
-                        sb.Append($",{item.Event.ToString()}");
+                        sb.Append($"|{item.Event.ToString()}");
 
 
 
