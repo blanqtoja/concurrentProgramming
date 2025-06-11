@@ -158,12 +158,12 @@ namespace Logic.BallLogic
             OnPropertyChanged(nameof(BallData));
 
             ILogBallEntry logDataBallEntryAfter = BallData.CreateLogEntry("Collision");
-            ILogBallEntry logOtherBallEntryAfter = BallData.CreateLogEntry("Collision");
+            //ILogBallEntry logOtherBallEntryAfter = BallData.CreateLogEntry("Collision");
 
             //logs.Add(logDataBallEntryBefore);
             //logs.Add(logOtherBallEntryBefore);
             logs.Add(logDataBallEntryAfter);
-            logs.Add(logDataBallEntryAfter);
+            //logs.Add(logDataBallEntryAfter);
 
             return logs;
         }
