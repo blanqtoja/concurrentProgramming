@@ -13,7 +13,7 @@ namespace Data.Ball
         double VelocityX { get; set; }
         double VelocityY { get; set; }
 
-        ILogBallEntry CreateLogEntry();
-        void Move(int width, int height);
+        ILogBallEntry CreateLogEntry(string str);
+        ILogBallEntry Move(int width, int height);
     }
 }

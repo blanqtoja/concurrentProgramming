@@ -27,27 +27,29 @@ namespace Data.Ball
             VelocityY = velocityY;
         }
 
-        public ILogBallEntry CreateLogEntry()
+        public ILogBallEntry CreateLogEntry(string str)
         {
             return new LogBallEntry
             {
                 Date = DateTime.Now,
                 Ball1Radius = Radius,
-                Ball1X = X, 
+                Ball1X = X,
                 Ball1Y = Y,
                 Ball1VelX = VelocityX,
                 Ball1VelY = VelocityY,
+                Event = str
             };
 
         
         }
 
-        public void Move(int width, int height)
+        public ILogBallEntry Move(int width, int height)
         {
             // aktualizujemy pozycje kuli
             X += VelocityX;
             Y += VelocityY;
 
+            string str = string.Empty;
             ////powiadomienie o zmianie pozycji
             //OnPropertyChanged(nameof(this));
 
@@ -56,29 +58,40 @@ namespace Data.Ball
             if (X - Radius < 0)
             {
                 // Console.WriteLine(X);
-                X = Radius; // Korekta pozycji
+                X = Radius; 
                 VelocityX = -VelocityX;
-                
+                str = "Left";
             }
             else if (X + 2 * Radius > width)
             {
-                X = width -  2* Radius; // Korekta pozycji
+                X = width -  2* Radius; 
                 VelocityX = -VelocityX;
-                
+
+                str = "Right";
+
             }
 
             // Odbicie od górnej/dolnej ściany
             if (Y - Radius < 0)
             {
-                Y = Radius; // Korekta pozycji
+                Y = Radius;
                 VelocityY = -VelocityY;
-                
+                str = "Top";
+
             }
             else if (Y + 2 * Radius > height)
             {
-                Y = height - 2 * Radius; // Korekta pozycji
+                Y = height - 2 * Radius;
                 VelocityY = -VelocityY;
+                str = "Bottom";
+
             }
+
+            if (str != string.Empty)
+            {
+                return CreateLogEntry(str);
+            }
+            return null;
         }
     }
 }

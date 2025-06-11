@@ -38,10 +38,10 @@ namespace Logic.BallLogic
             BallData = BallFactory.CreateRandomBall(width, height);
         }
 
-        public void MoveBall(int width, int height)
+        public ILogBallEntry MoveBall(int width, int height)
         {
-            BallData.Move(width, height);
             OnPropertyChanged(nameof(BallData));
+            return BallData.Move(width, height);
 
         }
         //public void MoveBall(int width, int height)
@@ -146,8 +146,8 @@ namespace Logic.BallLogic
             double impulse = (2 * dot) / (m1 + m2);
 
 
-            ILogBallEntry logDataBallEntryBefore = BallData.CreateLogEntry();
-            ILogBallEntry logOtherBallEntryBefore = BallData.CreateLogEntry();
+            //ILogBallEntry logDataBallEntryBefore = BallData.CreateLogEntry();
+            //ILogBallEntry logOtherBallEntryBefore = BallData.CreateLogEntry();
 
             // Zaktualizuj prędkości
             BallData.VelocityX -= impulse * m2 * nx;
@@ -157,11 +157,11 @@ namespace Logic.BallLogic
 
             OnPropertyChanged(nameof(BallData));
 
-            ILogBallEntry logDataBallEntryAfter = BallData.CreateLogEntry();
-            ILogBallEntry logOtherBallEntryAfter = BallData.CreateLogEntry();
+            ILogBallEntry logDataBallEntryAfter = BallData.CreateLogEntry("Collision");
+            ILogBallEntry logOtherBallEntryAfter = BallData.CreateLogEntry("Collision");
 
-            logs.Add(logDataBallEntryBefore);
-            logs.Add(logOtherBallEntryBefore);
+            //logs.Add(logDataBallEntryBefore);
+            //logs.Add(logOtherBallEntryBefore);
             logs.Add(logDataBallEntryAfter);
             logs.Add(logDataBallEntryAfter);
 

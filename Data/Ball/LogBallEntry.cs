@@ -13,14 +13,8 @@ namespace Data.Ball
         public double Ball1VelX { get; set; }
         public double Ball1VelY { get; set; }
 
-        //public double Ball2Radius { get; set; }
-        //public double Ball2X { get; set; }
-        //public double Ball2Y { get; set; }
-        //public double Ball2VelX { get; set; }
-        //public double Ball2VelY { get; set; }
 
-
-
+        public string Event { get; set; }
 
     }
 }

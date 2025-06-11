@@ -10,7 +10,8 @@ namespace Logic.BallLogic
     {
         IBall BallData { get; set; }
 
-        void MoveBall(int width, int height);
+        //void MoveBall(int width, int height);
+        ILogBallEntry MoveBall(int width, int height);
         List<ILogBallEntry> HandleCollision(IBall otherBall);
     }
 }

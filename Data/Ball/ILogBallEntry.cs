@@ -13,6 +13,7 @@ namespace Data.Ball
         double Ball1VelX { get; set; }
         double Ball1VelY { get; set; }
 
+        string Event { get; set; }
         //double Ball2Radius { get; set; }
         //double Ball2X { get; set; }
         //double Ball2Y { get; set; }

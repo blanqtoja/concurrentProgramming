@@ -11,7 +11,7 @@ using Logic.BallLogic;
 
 namespace Logic
 {
-    public class SimulationEngine
+    public class SimulationEngine : IDisposable
     {
         private readonly System.Timers.Timer _timer;
         private readonly List<IBallLogic> _balls;
@@ -20,6 +20,7 @@ namespace Logic
 
         public BlockingCollection<ILogBallEntry> logQueue = new BlockingCollection<ILogBallEntry>();
         private ManualResetEvent isLogQueueEmpty = new ManualResetEvent(false);
+        private readonly object _logQueueLock = new object();
 
         public SimulationEngine(IEnumerable<IBallLogic> balls, int width, int height)
         {
@@ -42,7 +43,15 @@ namespace Logic
             {
                 foreach (var ball in _balls)
                 {
-                    ball.MoveBall(_width, _height);
+                    ILogBallEntry log = ball.MoveBall(_width, _height);
+                    if(log != null) 
+                    {
+                        lock (_logQueueLock)
+                        {
+                            if (!logQueue.IsAddingCompleted)
+                                logQueue.Add(log);
+                        }
+                    }
                 }
 
                 for (int i = 0; i < _balls.Count; i++)
@@ -53,7 +62,19 @@ namespace Logic
                         if(logs == null) continue;
                         foreach (var log in logs)
                         {
-                            logQueue.Add(log);
+                            lock (_logQueueLock)
+                            {
+                                if (!logQueue.IsAddingCompleted)
+                                {
+                                    Console.WriteLine($"Rozmiar kolejki: {logQueue.Count}");
+                                    logQueue.Add(log);
+                                    Console.WriteLine($"nowy rozmiar: {logQueue.Count}");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("nie mozna dodac");
+                                }
+                            }
                         }
                     }
                 }
@@ -71,7 +92,7 @@ namespace Logic
                 {
                     if (!fileExists)
                     {
-                        writer.WriteLine("Date,Radius,X,Y,VelocityX,VelocityY");
+                        writer.WriteLine("Date,Radius,X,Y,VelocityX,VelocityY,Event");
                     }
 
                     foreach (var item in logQueue.GetConsumingEnumerable())
@@ -86,14 +107,34 @@ namespace Logic
 
                         sb.Append($",{item.Ball1VelX.ToString() ?? ""}");
                         sb.Append($",{item.Ball1VelY.ToString()}");
-                        
+
+                        sb.Append($",{item.Event.ToString()}");
+
+
 
                         writer.WriteLine(sb.ToString());
+                        writer.Flush(); 
+
                     }
-                    writer.Flush();
+                    // writer.Flush();
                 }
-                isLogQueueEmpty.Set(); // Signal that the log queue is empty
+                isLogQueueEmpty.Set(); 
             });
+        }
+
+        public void Dispose()
+        {
+            _timer?.Stop();
+            _timer?.Dispose();
+            
+            lock (_logQueueLock)
+            {
+                logQueue.CompleteAdding();
+            }
+            
+            isLogQueueEmpty.WaitOne(5000); 
+            logQueue.Dispose();
+            isLogQueueEmpty.Dispose();
         }
     }
 }
